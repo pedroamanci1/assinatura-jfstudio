@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tickets — JF Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Sans+3:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold: #c9a227;
+        --gold-light: #e8d48a;
+        --gold-dark: #8b6914;
+        --paper: #ffffff;
+        --ink: #0a0a0a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Source Sans 3", system-ui, sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+        background-image: linear-gradient(
+            180deg,
+            rgba(201, 162, 39, 0.06) 0%,
+            transparent 28%
+          ),
+          var(--paper);
+      }
+
+      .wrap {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 2rem 1.15rem 2.5rem;
+      }
+
+      .back {
+        display: inline-block;
+        margin-bottom: 1.25rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--gold-dark);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      header {
+        margin-bottom: 1.75rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 3px solid var(--gold);
+      }
+
+      h1 {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-weight: 600;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        margin: 0 0 0.35rem;
+        color: var(--ink);
+      }
+
+      .sub-id {
+        margin: 0;
+        font-size: 0.82rem;
+        opacity: 0.72;
+        word-break: break-all;
+      }
+
+      .panel {
+        border: 1px solid rgba(201, 162, 39, 0.5);
+        border-radius: 12px;
+        padding: 1.25rem 1.2rem;
+        background: var(--paper);
+        box-shadow: 0 1px 0 rgba(139, 105, 20, 0.1);
+      }
+
+      .countdown-wrap {
+        text-align: center;
+        margin: 0.5rem 0 1.25rem;
+      }
+
+      .countdown-label {
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        opacity: 0.88;
+      }
+
+      .countdown-num {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(3.5rem, 14vw, 5rem);
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        animation: countdown-pulse 2.2s ease-in-out infinite;
+      }
+
+      @keyframes countdown-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.03);
+          opacity: 0.88;
+        }
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem;
+        margin-top: 1rem;
+      }
+
+      .ctrl-btn {
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 1.35rem;
+        line-height: 1;
+        min-width: 3rem;
+        min-height: 3rem;
+        cursor: pointer;
+        border: 2px solid var(--gold);
+        background: linear-gradient(180deg, var(--gold-light), var(--gold));
+        color: var(--ink);
+        border-radius: 10px;
+        box-shadow: 0 2px 0 var(--gold-dark);
+      }
+
+      .ctrl-btn:hover:not(:disabled) {
+        filter: brightness(1.03);
+      }
+
+      .ctrl-btn:active:not(:disabled) {
+        transform: translateY(1px);
+        box-shadow: 0 1px 0 var(--gold-dark);
+      }
+
+      .ctrl-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .save-btn {
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 0.65rem 1.35rem;
+        cursor: pointer;
+        border: 2px solid var(--gold);
+        background: linear-gradient(180deg, #fff9e0, var(--gold-light));
+        color: var(--ink);
+        border-radius: 8px;
+        box-shadow: 0 2px 0 var(--gold-dark);
+        margin-left: 0.25rem;
+      }
+
+      .save-btn:hover:not(:disabled) {
+        filter: brightness(1.02);
+      }
+
+      .save-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .hint {
+        margin-top: 1.1rem;
+        font-size: 0.78rem;
+        line-height: 1.45;
+        opacity: 0.62;
+      }
+
+      .state {
+        margin-top: 1rem;
+        padding: 0.85rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+      }
+
+      .state.error {
+        border: 1px solid #b00020;
+        background: #fff8f8;
+        color: var(--ink);
+      }
+
+      .state.ok {
+        border: 1px solid rgba(201, 162, 39, 0.65);
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="/">← Voltar às assinaturas</a>
+
+      <header>
+        <h1 id="titleCliente">Tickets</h1>
+        <p class="sub-id" id="subLine"></p>
+      </header>
+
+      <div id="errBox" class="state error" hidden></div>
+      <div id="okBox" class="state ok" hidden></div>
+
+      <div id="panel" class="panel" hidden>
+        <div class="countdown-wrap">
+          <div class="countdown-label">
+            Contador de tickets guardado (<span id="yearLabel"></span>)
+          </div>
+          <div class="countdown-num" id="countdownVal" aria-live="polite">—</div>
+        </div>
+
+        <div class="controls">
+          <button type="button" class="ctrl-btn" id="btnMinus" aria-label="Diminuir contador">−</button>
+          <button type="button" class="ctrl-btn" id="btnPlus" aria-label="Aumentar contador">+</button>
+          <button type="button" class="save-btn" id="btnSave">Guardar</button>
+        </div>
+
+        <p class="hint">
+          O número mostrado na lista e aqui vem <strong>só</strong> do ficheiro
+          <code>data/tickets.json</code> (campo <code>countdown</code> por ano e assinatura), após
+          clicar em Guardar. Até à primeira gravação aparece <strong>—</strong>.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(location.search);
+      const subscriptionId = (params.get("subscription") || "").trim();
+      const clienteNome = params.get("cliente") || "Cliente";
+
+      const titleCliente = document.getElementById("titleCliente");
+      const subLine = document.getElementById("subLine");
+      const errBox = document.getElementById("errBox");
+      const okBox = document.getElementById("okBox");
+      const panel = document.getElementById("panel");
+      const yearLabel = document.getElementById("yearLabel");
+      const countdownEl = document.getElementById("countdownVal");
+      const btnMinus = document.getElementById("btnMinus");
+      const btnPlus = document.getElementById("btnPlus");
+      const btnSave = document.getElementById("btnSave");
+
+      let countdown = 0;
+      let noFileYet = true;
+      let edited = false;
+
+      function showErr(msg) {
+        errBox.hidden = !msg;
+        errBox.textContent = msg || "";
+        okBox.hidden = true;
+      }
+
+      function showOk(msg) {
+        okBox.hidden = !msg;
+        okBox.textContent = msg || "";
+      }
+
+      function updateDisplay() {
+        if (noFileYet && !edited && countdown === 0) {
+          countdownEl.textContent = "—";
+        } else {
+          countdownEl.textContent = String(countdown);
+        }
+      }
+
+      function setCountdown(n) {
+        edited = true;
+        countdown = Math.max(0, Math.min(1_000_000, Math.floor(Number(n)) || 0));
+        updateDisplay();
+      }
+
+      function validSubId(id) {
+        return /^sub_[a-zA-Z0-9]+$/.test(id);
+      }
+
+      async function load() {
+        showErr("");
+        showOk("");
+        panel.hidden = true;
+        btnMinus.disabled = true;
+        btnPlus.disabled = true;
+        btnSave.disabled = true;
+
+        if (!validSubId(subscriptionId)) {
+          showErr("Parâmetro «subscription» em falta ou inválido. Use o ícone de ticket na lista.");
+          return;
+        }
+
+        titleCliente.textContent = clienteNome;
+        subLine.textContent = "Assinatura: " + subscriptionId;
+
+        try {
+          const res = await fetch("/api/tickets/" + encodeURIComponent(subscriptionId));
+          const body = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(body.error || res.statusText);
+
+          yearLabel.textContent = body.year;
+          noFileYet = body.countdown === null;
+          edited = false;
+          countdown =
+            body.countdown !== null && body.countdown !== undefined
+              ? Math.max(0, Math.min(1_000_000, Math.floor(Number(body.countdown))))
+              : 0;
+          updateDisplay();
+          panel.hidden = false;
+        } catch (e) {
+          showErr(e.message || String(e));
+        } finally {
+          btnMinus.disabled = false;
+          btnPlus.disabled = false;
+          btnSave.disabled = false;
+        }
+      }
+
+      btnMinus.addEventListener("click", () => {
+        setCountdown(countdown - 1);
+        showOk("");
+      });
+
+      btnPlus.addEventListener("click", () => {
+        setCountdown(countdown + 1);
+        showOk("");
+      });
+
+      btnSave.addEventListener("click", async () => {
+        showErr("");
+        showOk("");
+        btnSave.disabled = true;
+        try {
+          const res = await fetch("/api/tickets/" + encodeURIComponent(subscriptionId), {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ countdown }),
+          });
+          const body = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(body.error || res.statusText);
+          noFileYet = false;
+          edited = false;
+          countdown = Math.max(0, Math.min(1_000_000, Math.floor(Number(body.countdown))));
+          updateDisplay();
+          showOk("Contador atualizado e guardado.");
+        } catch (e) {
+          showErr(e.message || String(e));
+        } finally {
+          btnSave.disabled = false;
+        }
+      });
+
+      load();
+    </script>
+  </body>
+</html>
