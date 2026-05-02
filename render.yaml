@@ -1,0 +1,19 @@
+# Blueprint Render: https://render.com/docs/blueprint-spec
+# Novo serviço: Dashboard → Blueprints → New Blueprint Instance → liga este repositório.
+# Na primeira vez, o Render pede o valor de STRIPE_SECRET_KEY (sync: false).
+# Opcional no painel do serviço: STRIPE_ACCOUNT, STRIPE_SUBSCRIPTION_STATUSES, PORT (o Render define PORT automaticamente).
+# Aviso — plano Free: o disco é efémero; data/tickets.json pode ser apagado em redeploys.
+
+services:
+  - type: web
+    name: assinatura-jfstudio
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20.18.0"
+      - key: STRIPE_SECRET_KEY
+        sync: false
